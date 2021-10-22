@@ -1,0 +1,89 @@
+{
+    "version": "2.0.0",
+    "windows": {
+        "options": {
+            "shell": {
+                "executable": "powershell.exe",
+                "args": [
+                    "-NoProfile",
+                    "-ExecutionPolicy",
+                    "Bypass",
+                    "-Command"
+                ]
+            }
+        }
+    },
+    "tasks": [
+        {
+            "label": "Publish new module version",
+            "type": "shell",
+            "problemMatcher": [ "$msCompile" ],
+            "group": "build",
+            "command": "${workspaceFolder}\\modules\\psbuild\\scripts\\publish.ps1",
+            "options": {
+                "cwd": "${workspaceFolder}\\public",
+                "env": {
+                    "ModuleName": "ProjectBuilder"
+                }
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "dependsOn": [
+                "Run Unit Test"
+            ],
+            "dependsOrder": "sequence"
+        },
+        {
+            "label": "Run Unit Test",
+            "type": "shell",
+            "problemMatcher": [ "$msCompile" ],
+            "command": "${workspaceFolder}\\modules\\psbuild\\scripts\\test.ps1",
+            "options": {
+                "cwd": "${workspaceFolder}\\public",
+                "env": {
+                    "RunIn": "${workspaceFolder}\\tmp",
+                    "ModuleName": "ProjectBuilder"
+                }
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "dependsOn": [
+                "Build"
+            ],
+            "dependsOrder": "sequence"
+        },
+                {
+            "label": "Build",
+            "type": "shell",
+            "problemMatcher": [ "$msCompile" ],
+            "command": "${workspaceFolder}\\modules\\psbuild\\scripts\\build.ps1",
+            "options": {
+                "cwd": "${workspaceFolder}\\src",
+                "env": {
+                    "OutputDestination": "${workspaceFolder}\\public",
+                    "ModuleName": "ProjectBuilder"
+                }
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+        }
+    ]
+}
